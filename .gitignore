@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+._*
+
+# Makefile
+Build/*
+.Make/*
+Shared/ACPI/*.aml
+Shared/UEFI/*
+
+# Clover
+Clover/ACPI/Patched/*
+Clover/Drivers/UEFI/*
+Clover/Kexts/Other/*
+Clover/Tools/*
+
+# OpenCore
+OpenCore/OC/ACPI/*
+OpenCore/OC/Drivers/*
+OpenCore/OC/Kexts/*
+OpenCore/OC/Tools/*
+
+# BootLoaders
+BOOTx64.efi
+CLOVERX64.efi
+OpenCore.efi
+
+# Exclude
+!.gitkeep
