@@ -54,6 +54,7 @@ cd Hackintosh-Asus-ROG-Laptop-Coffee-Lake
 - [x] 4 级键盘背光灯控制
 - [x] ROG AURA 灯效控制
 - [x] Siri
+- [x] USB Sidecar
 - [x] ...
 
 > 1. 以上功能只在 GX531 中测试通过

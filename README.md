@@ -54,6 +54,7 @@ cd Hackintosh-Asus-ROG-Laptop-Coffee-Lake
 - [x] 4 level keyboard backight control
 - [x] ROG AURA effects control
 - [x] Siri
+- [x] USB Sidecar
 - [x] ...
 
 > 1. The above functions are only tested and passed in GX531.
