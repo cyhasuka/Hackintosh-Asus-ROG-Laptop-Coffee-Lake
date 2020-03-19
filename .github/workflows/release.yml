@@ -1,0 +1,29 @@
+name: Auto-Release
+
+on:
+  schedule:
+    # Monthly Release, Runs at 00:00 UTC on the 15th of every month
+    - cron:  '0 0 15 * *'
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build EFI
+      run: chmod +x ./Makefile.sh; ./Makefile.sh
+    
+    - name: Prepare Release
+      run: chmod +x ./.github/CreateRelease.sh; ./.github/CreateRelease.sh
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifact: "Build/*.zip"
+        bodyFile: ReleaseNotes.md
+        name: "${{ env.ReName }}"
+        tag: v${{ env.NewVer }}
+        token: ${{ secrets.GITHUB_TOKEN }}   
