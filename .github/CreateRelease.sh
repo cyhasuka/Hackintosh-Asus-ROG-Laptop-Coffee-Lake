@@ -46,6 +46,7 @@ if command -v git >/dev/null 2>&1; then
     echo "- Clover"  >> ReleaseNotes.md
     echo "- All kexts" >> ReleaseNotes.md
     echo "To the latest version at the moment of this release" >> ReleaseNotes.md
+    echo "" >> ReleaseNotes.md
     echo "> AsusSMC is not working in Catalina, please manually delete it in Clover, limitations have already been set in OpenCore" >> ReleaseNotes.md
     cat ReleaseNotes.md
 else

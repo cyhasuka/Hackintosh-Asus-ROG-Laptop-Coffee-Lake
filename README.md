@@ -104,8 +104,6 @@ cd Hackintosh-Asus-ROG-Laptop-Coffee-Lake
 
 ## Gallery
 
-![GX531](https://ae01.alicdn.com/kf/Uc6a6891bfbb440a889471d61a1302b5dy.jpg)
-
 ![Info](https://ae01.alicdn.com/kf/U8638fcf1315f447babcdb58458eec1959.jpg)
 
 ![FnSound](https://ae01.alicdn.com/kf/Udeb369199cb14cf492d7283287dda7d0q.jpg)
