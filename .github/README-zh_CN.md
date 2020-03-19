@@ -73,6 +73,7 @@ cd Hackintosh-Asus-ROG-Laptop-Coffee-Lake
 ## 不可用的功能
 
 - 独显 NVIDIA Geforce GTX 1070 with Max-Q Design **及与之相连的 HDMI**
+- USB Type-C 视频输出 (连在独显上)
 - 触摸板数字键盘
 
 ## 特别感谢

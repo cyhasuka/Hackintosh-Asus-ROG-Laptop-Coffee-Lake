@@ -72,7 +72,8 @@ cd Hackintosh-Asus-ROG-Laptop-Coffee-Lake
 
 ## Not Working Features
 
-- NVIDIA GTX1070 with MAX-Q Design **and the connected HDMI port with it**
+- NVIDIA GTX1070 with MAX-Q Design **and the connected HDMI port**
+- Video output from USB Type-C (Connected to NVIDIA Graphics Card)
 - Numberpad on trackpad
 
 ## Special Thanks
