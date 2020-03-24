@@ -264,16 +264,16 @@ function DL() {
     # Download Kexts
     DGR $ACDT Lilu
     DGR $ACDT VirtualSMC
-    #DGR $ACDT AppleALC
+    DGR $ACDT AppleALC #TODO: Will need a custom modification, the original release is too big
     DGR $ACDT CPUFriend
     DGR $ACDT WhateverGreen
     DGR $ACDT NVMeFix
     DGR $ACDT AppleSupportPkg NULL OC_ASPKG
     DGR $ACDT AppleSupportPkg 19214108 CLOVER_LASPKG
     DGR al3xtjames NoTouchID
-    #DGR hieplpvip AsusSMC # (Not Ready)
+    DGR hieplpvip AsusSMC
     DGR alexandred VoodooI2C
-    DGR zxystd IntelBluetoothFirmware
+    DGR zxystd IntelBluetoothFirmware #TODO: Will need a custom modification, the original release is too big
     DBR Rehabman os-x-null-ethernet
 
     # Clover
