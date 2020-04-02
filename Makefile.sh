@@ -6,7 +6,8 @@
 #
 # References:
 # https://github.com/daliansky/XiaoMi-Pro-Hackintosh/blob/master/install.sh by stevezhengshiqi
-# https://github.com/black-dragon74/OSX-Debug/blob/master/gen_debug.sh by black-dragon74
+# https://github.com/black-dragon74/OSX-Debug/blob/master/gen_debug.sh      by black-dragon74
+# https://raw.githubusercontent.com/acidanthera/ocbuild/master/efibuild.sh  by Acidanthera
 
 # WorkSpaceDir
 WSDir="$( cd "$(dirname "$0")" ; pwd -P )/.Make"
@@ -14,6 +15,14 @@ WSDir="$( cd "$(dirname "$0")" ; pwd -P )/.Make"
 # Vars
 GH_API=True
 CLEAN_UP=True
+
+# Env
+if [ "$(which clang)" = "" ] || [ "$(which git)" = "" ] || [ "$(which xcpretty)" = "" ] || [ "$(clang -v 2>&1 | grep "no developer")" != "" ] || [ "$(git -v 2>&1 | grep "no developer")" != "" ]; then
+    echo "Missing Xcode tools, won't build simplified kexts!"
+    NO_XCODE=True
+else
+    NO_XCODE=False
+fi
 
 # Args
 while [[ $# -gt 0 ]]; do
@@ -48,6 +57,11 @@ if [[ -z ${GITHUB_ACTIONS+x} ]]; then
     bold=`tput bold`
 fi
 
+# Print with color effects
+#function beautyEcho() {
+
+#}
+
 # Exit on Network Issue
 function networkErr() {
     echo "${yellow}[${reset}${red}${bold} ERROR ${reset}${yellow}]${reset}: Failed to download resources from ${1}, please check your connection!"
@@ -61,6 +75,37 @@ function Cleanup() {
         rm -rf $WSDir
         rm -rf ../Shared/ACPI/*.aml
     fi
+}
+
+# Build Simplified Kexts for better performance
+function BKext() {
+    # Simplified AppleALC
+    git clone --depth=1 https://github.com/acidanthera/AppleALC.git && cd AppleALC
+    cd Resources
+        ls -1 | grep -v 'plist\|kext\|ALC294' | xargs rm -rf
+    cd ALC294
+        ls -1 | grep -v '21' | xargs rm -rf
+    #cd ..
+    #    /usr/libexec/PlistBuddy -c "Delete :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault" PinConfigs.kext/Contents/Info.plist
+    #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault array" PinConfigs.kext/Contents/Info.plist
+    #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault:0 dict" PinConfigs.kext/Contents/Info.plist
+    cd ../../
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/bootstrap.sh) && eval "$src" || exit 1
+        xcodebuild -scheme AppleALC -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+        cp -R build/Build/Products/Release/AppleALC.kext ../
+    cd ../
+    # Simplified IntelBluetoothFirmware
+    git clone --depth=1 https://github.com/zxystd/IntelBluetoothFirmware.git && cd IntelBluetoothFirmware
+    cd IntelBluetoothFirmware/fw
+        ls -1 | grep -v '17-16-1' | xargs rm -rf
+    cd ../../
+        PATH_TO_REL='build/Build/Products/Release/'
+        xcodebuild -scheme "FB" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+        xcodebuild -scheme "IntelBluetoothFirmware" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+        mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext
+        mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents
+        cp IntelBluetoothInjector/Info.plist ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents/
+        cp -R ${PATH_TO_REL}/*.kext ../
 }
 
 # Workaround for Release Binaries that don't include "RELEASE" in their file names (head or grep)
@@ -139,7 +184,7 @@ function DPB() {
 }
 
 # Exclude Trash
-function CTrash() {
+function CTrash() { # TODO: Implement White List Mode to replace this unsafe approach
     # Files
     rm -rf *.app >/dev/null 2>&1
     rm -rf *.aml >/dev/null 2>&1
@@ -264,7 +309,6 @@ function DL() {
     # Download Kexts
     DGR $ACDT Lilu
     DGR $ACDT VirtualSMC
-    DGR $ACDT AppleALC #TODO: Will need a custom modification, the original release is too big
     DGR $ACDT CPUFriend
     DGR $ACDT WhateverGreen
     DGR $ACDT NVMeFix
@@ -273,8 +317,13 @@ function DL() {
     DGR al3xtjames NoTouchID
     DGR hieplpvip AsusSMC
     DGR alexandred VoodooI2C
-    DGR zxystd IntelBluetoothFirmware #TODO: Will need a custom modification, the original release is too big
     DBR Rehabman os-x-null-ethernet
+    if [[ $NO_XCODE == True ]]; then
+        DGR $ACDT AppleALC
+        DGR zxystd IntelBluetoothFirmware
+    else
+        BKext()
+    fi
 
     # Clover
     DGR CloverHackyColor CloverBootloader
