@@ -17,7 +17,7 @@ GH_API=True
 CLEAN_UP=True
 
 # Env
-if [ "$(which clang)" = "" ] || [ "$(which git)" = "" ] || [ "$(which xcpretty)" = "" ] || [ "$(clang -v 2>&1 | grep "no developer")" != "" ] || [ "$(git -v 2>&1 | grep "no developer")" != "" ]; then
+if [ "$(which clang)" = "" ] || [ "$(which git)" = "" ] || [ "$(clang -v 2>&1 | grep "no developer")" != "" ] || [ "$(git -v 2>&1 | grep "no developer")" != "" ]; then
     echo "Missing Xcode tools, won't build simplified kexts!"
     NO_XCODE=True
 else
@@ -80,7 +80,9 @@ function Cleanup() {
 # Build Simplified Kexts for better performance
 function BKext() {
     # Simplified AppleALC
-    git clone --depth=1 https://github.com/acidanthera/AppleALC.git && cd AppleALC
+    echo "${green}[${reset}${blue}${bold} Building Simplified AppleALC ${reset}${green}]${reset}"
+    git clone --depth=1 https://github.com/acidanthera/AppleALC.git >/dev/null 2>&
+    cd AppleALC
     cd Resources
         ls -1 | grep -v 'plist\|kext\|ALC294' | xargs rm -rf
     cd ALC294
@@ -90,18 +92,20 @@ function BKext() {
     #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault array" PinConfigs.kext/Contents/Info.plist
     #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault:0 dict" PinConfigs.kext/Contents/Info.plist
     cd ../../
-        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/bootstrap.sh) && eval "$src" || exit 1
-        xcodebuild -scheme AppleALC -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/bootstrap.sh) && eval "$src" >/dev/null 2>& || exit 1
+        xcodebuild -scheme AppleALC -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
         cp -R build/Build/Products/Release/AppleALC.kext ../
     cd ../
     # Simplified IntelBluetoothFirmware
-    git clone --depth=1 https://github.com/zxystd/IntelBluetoothFirmware.git && cd IntelBluetoothFirmware
+    echo "${green}[${reset}${blue}${bold} Building Simplified IntelBluetoothFirmware ${reset}${green}]${reset}"
+    git clone --depth=1 https://github.com/zxystd/IntelBluetoothFirmware.git >/dev/null 2>&
+    cd IntelBluetoothFirmware
     cd IntelBluetoothFirmware/fw
         ls -1 | grep -v '17-16-1' | xargs rm -rf
     cd ../../
         PATH_TO_REL='build/Build/Products/Release/'
-        xcodebuild -scheme "FB" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
-        xcodebuild -scheme "IntelBluetoothFirmware" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+        xcodebuild -scheme "FB" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
+        xcodebuild -scheme "IntelBluetoothFirmware" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
         mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext
         mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents
         cp IntelBluetoothInjector/Info.plist ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents/
@@ -118,7 +122,6 @@ function H_or_G() {
         HG="grep -m 1 IntelBluetooth"
     elif [[ "$1" == "OpenCore-Factory" ]]; then
         HG="grep -m 2 RELEASE | tail +2"
-        echo debug
     else
         HG="grep -m 1 RELEASE"
     fi
