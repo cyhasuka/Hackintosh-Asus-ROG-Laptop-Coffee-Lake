@@ -113,9 +113,12 @@ function H_or_G() {
     if [[ "$1" == "VoodooI2C" ]]; then
         HG="head -n 1"
     elif [[ "$1" == "CloverBootloader" ]]; then
-        HG="grep CloverISO"
+        HG="grep -m 1 CloverISO"
     elif [[ "$1" == "IntelBluetoothFirmware" ]]; then
         HG="grep -m 1 IntelBluetooth"
+    elif [[ "$1" == "OpenCore-Factory" ]]; then
+        HG="grep -m 2 RELEASE | tail +2"
+        echo debug
     else
         HG="grep -m 1 RELEASE"
     fi
@@ -184,32 +187,17 @@ function DPB() {
 }
 
 # Exclude Trash
-function CTrash() { # TODO: Implement White List Mode to replace this unsafe approach
+function CTrash() {
     # Files
-    rm -rf *.app >/dev/null 2>&1
-    rm -rf *.aml >/dev/null 2>&1
-    rm -rf *.dSYM >/dev/null 2>&1
-    rm -rf *.dsl >/dev/null 2>&1
-    rm -rf *.sh >/dev/null 2>&1
-    rm -rf *.plist >/dev/null 2>&1
-    rm -rf *.txt >/dev/null 2>&1
-    rm -rf *.zip >/dev/null 2>&1
-    rm -rf "AsusSMCDaemon" >/dev/null 2>&1
+    ls -F | grep -v / | grep -v 'lzma\|iasl' | xargs rm -rf
+    rm -rf *aemon* # Why executable files would escape the previous rm -rf?
 
     # Folders
-    rm -rf "Docs" >/dev/null 2>&1
-    rm -rf "dSYM" >/dev/null 2>&1
-    rm -rf "Utilities" >/dev/null 2>&1
-    rm -rf "Debug" >/dev/null 2>&1
-    rm -rf "__MACOSX" >/dev/null 2>&1
+    ls -F | grep / | grep -v 'kext\|Release\|ASPKG\|Drivers\|EFI' | xargs rm -rf
+    rm -rf *.dSYM
 
     # Kexts
-    rm -rf VoodooI2CAtmelMXT.kext >/dev/null 2>&1
-    rm -rf VoodooI2CELAN.kext >/dev/null 2>&1
-    rm -rf VoodooI2CFTE.kext >/dev/null 2>&1
-    rm -rf VoodooI2CSynaptics.kext >/dev/null 2>&1
-    rm -rf VoodooI2CUPDDEngine.kext >/dev/null 2>&1
-    rm -rf NullEthernetInjector.kext >/dev/null 2>&1
+    ls -1 | grep -i 'kext' | grep -v 'ALC\|CPU\|SMC\|What\|I2C.kext\|I2CHID\|TouchID\|IntelBlue\|Lilu\|NVMe' | xargs rm -rf
 }
 
 # Extract files for Clover
@@ -334,8 +322,8 @@ function DL() {
     # Tools
     DPB $ACDT MaciASL Dist/iasl-stable
 
-    # HFSPlus.efi
-    DPB STLVNUB CloverGrower Files/HFSPlus/x64/HFSPlus.efi "../Shared/UEFI"
+    # UEFI
+    DPB $ACDT OcBinaryData Drivers/HfsPlus.efi "../Shared/UEFI"
     DPB $ACDT VirtualSMC EfiDriver/VirtualSmc.efi "Drivers"
 }
 
