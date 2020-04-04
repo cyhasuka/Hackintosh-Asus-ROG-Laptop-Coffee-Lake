@@ -81,7 +81,8 @@ function Cleanup() {
 function BKext() {
     # Simplified AppleALC
     echo "${green}[${reset}${blue}${bold} Building Simplified AppleALC ${reset}${green}]${reset}"
-    git clone --depth=1 https://github.com/acidanthera/AppleALC.git >/dev/null 2>&
+    echo ""
+    git clone --depth=1 https://github.com/acidanthera/AppleALC.git >/dev/null 2>&1
     cd AppleALC
     cd Resources
         ls -1 | grep -v 'plist\|kext\|ALC294' | xargs rm -rf
@@ -92,20 +93,21 @@ function BKext() {
     #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault array" PinConfigs.kext/Contents/Info.plist
     #    /usr/libexec/PlistBuddy -c "Add :IOKitPersonalities:'HDA Hardware Config Resource':HDAConfigDefault:0 dict" PinConfigs.kext/Contents/Info.plist
     cd ../../
-        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/bootstrap.sh) && eval "$src" >/dev/null 2>& || exit 1
-        xcodebuild -scheme AppleALC -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/bootstrap.sh) && eval "$src" >/dev/null 2>&1 || exit 1
+        xcodebuild -scheme AppleALC -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&1
         cp -R build/Build/Products/Release/AppleALC.kext ../
     cd ../
     # Simplified IntelBluetoothFirmware
     echo "${green}[${reset}${blue}${bold} Building Simplified IntelBluetoothFirmware ${reset}${green}]${reset}"
-    git clone --depth=1 https://github.com/zxystd/IntelBluetoothFirmware.git >/dev/null 2>&
+    echo ""
+    git clone --depth=1 https://github.com/zxystd/IntelBluetoothFirmware.git >/dev/null 2>&1
     cd IntelBluetoothFirmware
     cd IntelBluetoothFirmware/fw
         ls -1 | grep -v '17-16-1' | xargs rm -rf
     cd ../../
         PATH_TO_REL='build/Build/Products/Release/'
-        xcodebuild -scheme "FB" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
-        xcodebuild -scheme "IntelBluetoothFirmware" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&
+        xcodebuild -scheme "FB" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&1
+        xcodebuild -scheme "IntelBluetoothFirmware" -configuration Release -sdk macosx10.15 -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO >/dev/null 2>&1
         mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext
         mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents
         cp IntelBluetoothInjector/Info.plist ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents/
