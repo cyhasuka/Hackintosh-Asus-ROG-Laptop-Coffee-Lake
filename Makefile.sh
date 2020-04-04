@@ -310,7 +310,7 @@ function DL() {
         DGR $ACDT AppleALC
         DGR zxystd IntelBluetoothFirmware
     else
-        BKext()
+        BKext
     fi
 
     # Clover
