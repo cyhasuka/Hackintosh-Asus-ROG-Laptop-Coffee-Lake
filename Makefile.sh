@@ -110,6 +110,7 @@ function BKext() {
         mkdir ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents
         cp IntelBluetoothInjector/Info.plist ${PATH_TO_REL}IntelBluetoothInjector.kext/Contents/
         cp -R ${PATH_TO_REL}/*.kext ../
+    cd ../
 }
 
 # Workaround for Release Binaries that don't include "RELEASE" in their file names (head or grep)
@@ -207,8 +208,8 @@ function CTrash() {
 function ExtractClover() {
     #From CloverISO
     tar --lzma -xvf CloverISO*.tar.lzma >/dev/null 2>&1
-    hdiutil mount Clover-v2.*.iso >/dev/null 2>&1
-    ImageMountDir="$(dirname /Volumes/Clover-v2.*/EFI/CLOVER)/CLOVER"
+    hdiutil mount Clover-*.iso >/dev/null 2>&1
+    ImageMountDir="$(dirname /Volumes/Clover-*/EFI/CLOVER)/CLOVER"
     cp -R "$ImageMountDir"/CLOVERX64.efi "../Clover"
     cp -R "$ImageMountDir"/tools/*.efi "../Clover/Tools"
 
@@ -216,7 +217,7 @@ function ExtractClover() {
         cp -R "$ImageMountDir"/drivers/off/${CLOVERdotEFIdrv}.efi "../Clover/Drivers/UEFI"
     done
 
-    hdiutil unmount "$(dirname /Volumes/Clover-v2.*/EFI)" >/dev/null 2>&1
+    hdiutil unmount "$(dirname /Volumes/Clover-*/EFI)" >/dev/null 2>&1
 
     #From AppleSupportPkg 2.0.9
     cd CLOVER_LASPKG && unzip *.zip >/dev/null 2>&1; cd - >/dev/null 2>&1
@@ -230,7 +231,8 @@ function ExtractClover() {
 function ExtractOC() {
     cp -R EFI/BOOT/BOOTx64.efi "../OpenCore/Boot"
     cp -R EFI/OC/OpenCore.efi "../OpenCore/OC"
-    cp -R EFI/OC/Drivers/FwRuntimeServices.efi "../OpenCore/OC/Drivers"
+    cp -R EFI/OC/Drivers/OpenRuntime.efi "../OpenCore/OC/Drivers"
+    cp -R EFI/OC/Drivers/OpenCanopy.efi "../OpenCore/OC/Drivers"
     cp -R EFI/OC/Tools/VerifyMsrE2.efi ../OpenCore/OC/Tools
     cd OC_ASPKG && unzip *.zip >/dev/null 2>&1; cd - >/dev/null 2>&1
     cp -R OC_ASPKG/Drivers/ApfsDriverLoader.efi "../OpenCore/OC/Drivers"
@@ -259,7 +261,6 @@ function Install() {
     done
 
     # Drivers
-    cp -R Drivers/*.efi "../Clover/Drivers/UEFI"
     for Driverdir in "../Clover/Drivers/UEFI" "../OpenCore/OC/Drivers"; do
         cp -R ../Shared/UEFI/*.efi "$Driverdir"
     done
@@ -327,7 +328,7 @@ function DL() {
 
     # UEFI
     DPB $ACDT OcBinaryData Drivers/HfsPlus.efi "../Shared/UEFI"
-    DPB $ACDT VirtualSMC EfiDriver/VirtualSmc.efi "Drivers"
+    DPB $ACDT VirtualSMC EfiDriver/VirtualSmc.efi "../Clover/Drivers/UEFI"
 }
 
 function Init() {
