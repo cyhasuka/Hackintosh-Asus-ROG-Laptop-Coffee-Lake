@@ -203,7 +203,7 @@ function CTrash() {
     rm -rf *.dSYM
 
     # Kexts
-    ls -1 | grep -i 'kext' | grep -v 'ALC\|CPU\|SMC\|What\|I2C.kext\|I2CHID\|TouchID\|IntelBlue\|Lilu\|NVMe' | xargs rm -rf
+    ls -1 | grep -i 'kext' | grep -v 'Kexts\|ALC\|CPU\|SMC\|What\|I2C.kext\|I2CHID\|TouchID\|IntelBlue\|Lilu\|NVMe' | xargs rm -rf
 }
 
 # Extract files for Clover
