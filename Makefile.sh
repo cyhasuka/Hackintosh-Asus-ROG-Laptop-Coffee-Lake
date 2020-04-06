@@ -323,7 +323,8 @@ function DL() {
     DGR CloverHackyColor CloverBootloader
 
     # OpenCore
-    DGR williambj1 OpenCore-Factory PreRelease
+    #DGR williambj1 OpenCore-Factory PreRelease
+    DGR $ACDT OpenCorePkg
 
     # Tools
     DPB $ACDT MaciASL Dist/iasl-stable
