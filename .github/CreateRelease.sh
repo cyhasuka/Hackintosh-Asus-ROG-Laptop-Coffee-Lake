@@ -20,6 +20,9 @@ if command -v git >/dev/null 2>&1; then
         echo "::set-env name=ReName::$ReName"
     fi
 
+    find . -name ".git*" -delete
+    find . -name ".DS_Store*" -delete
+
     zip -qr Build/EFI.v.${NewVer}.zip OpenCore Clover LICENSE -x \*/\.\*
 
     echo "# v${NewVer}" >> ReleaseNotes.md
