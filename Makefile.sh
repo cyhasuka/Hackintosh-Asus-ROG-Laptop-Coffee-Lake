@@ -309,7 +309,7 @@ function DL() {
     DGR $ACDT AppleSupportPkg NULL OC_ASPKG
     DGR $ACDT AppleSupportPkg 19214108 CLOVER_LASPKG
     DGR al3xtjames NoTouchID
-    DGR hieplpvip AsusSMC
+    #DGR hieplpvip AsusSMC
     DGR alexandred VoodooI2C
     DBR Rehabman os-x-null-ethernet
     if [[ $NO_XCODE == True ]]; then

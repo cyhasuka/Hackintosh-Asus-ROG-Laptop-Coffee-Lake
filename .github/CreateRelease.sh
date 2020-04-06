@@ -24,9 +24,9 @@ if command -v git >/dev/null 2>&1; then
 
     echo "# v${NewVer}" >> ReleaseNotes.md
     echo "- **This is the full EFI**" >> ReleaseNotes.md
-    git log -"$(git rev-list --count $(git rev-list --tags | head -n 1)..HEAD)" --format="- %H %s" | grep -v 'Makefile\|gitignore\|Repo\|Docs\|Merge\|yml' | sed  '/^$/d' >> ReleaseNotes.md
+    git log -"$(git rev-list --count $(git rev-list --tags | head -n 1)..HEAD)" --format="- %H %s" | grep -v 'Makefile\|gitignore\|Repo\|Docs\|Merge\|yml\|CI\|Commit\|commit\|attributes' | sed  '/^$/d' >> ReleaseNotes.md
 
-    #FIX_ME Bypass GitHub API Rate Limit by directly curl the entire web page
+    #FIXME: Bypass GitHub API Rate Limit by directly curl the entire web page
 
     # Get OpenCore version and release url
     ##OcReInfo="$(curl --silent https://api.github.com/repos/williambj1/OpenCore-Factory/releases | head -n 45)"
@@ -45,9 +45,10 @@ if command -v git >/dev/null 2>&1; then
     echo "- OpenCore" >> ReleaseNotes.md
     echo "- Clover"  >> ReleaseNotes.md
     echo "- All kexts" >> ReleaseNotes.md
+    echo "" >> ReleaseNotes.md
     echo "To the latest version at the moment of this release" >> ReleaseNotes.md
     echo "" >> ReleaseNotes.md
-    echo "> AsusSMC is not working in Catalina, please manually delete it in Clover, limitations have already been set in OpenCore" >> ReleaseNotes.md
+    #echo "> AsusSMC is not working in Catalina, please manually delete it in Clover, limitations have already been set in OpenCore" >> ReleaseNotes.md
     cat ReleaseNotes.md
 else
     echo "Git is required but not installed. Skipping Create Release."
