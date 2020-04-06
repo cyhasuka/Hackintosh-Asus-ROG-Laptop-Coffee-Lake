@@ -199,7 +199,7 @@ function CTrash() {
     rm -rf *aemon* # Why executable files would escape the previous rm -rf?
 
     # Folders
-    ls -F | grep / | grep -v 'kext\|Release\|ASPKG\|Drivers\|EFI' | xargs rm -rf
+    ls -F | grep / | grep -v 'kext\|Release\|ASPKG\|Drivers\|EFI\|Kexts' | xargs rm -rf
     rm -rf *.dSYM
 
     # Kexts
