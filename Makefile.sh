@@ -195,15 +195,15 @@ function DPB() {
 # Exclude Trash
 function CTrash() {
     # Files
-    ls -F | grep -v / | grep -v 'lzma\|iasl' | xargs rm -rf
-    rm -rf *aemon* # Why executable files would escape the previous rm -rf?
+    ls -F | grep -v / | grep -v 'lzma\|iasl' | xargs rm -rf >/dev/null 2>&1
+    rm -rf *aemon* >/dev/null 2>&1 # Why executable files would escape the previous rm -rf?
 
     # Folders
-    ls -F | grep / | grep -v 'kext\|Release\|ASPKG\|Drivers\|EFI\|Kexts' | xargs rm -rf
-    rm -rf *.dSYM
+    ls -F | grep / | grep -v 'kext\|Release\|ASPKG\|Drivers\|EFI\|Kexts' | xargs rm -rf >/dev/null 2>&1
+    rm -rf *.dSYM >/dev/null 2>&1
 
     # Kexts
-    ls -1 | grep -i 'kext' | grep -v 'Kexts\|ALC\|CPU\|SMC\|What\|I2C.kext\|I2CHID\|TouchID\|IntelBlue\|Lilu\|NVMe' | xargs rm -rf
+    ls -1 | grep -i 'kext' | grep -v 'Kexts\|ALC\|CPU\|SMC\|What\|I2C.kext\|I2CHID\|TouchID\|IntelBlue\|Lilu\|NVMe' | xargs rm -rf >/dev/null 2>&1
 }
 
 # Extract files for Clover
